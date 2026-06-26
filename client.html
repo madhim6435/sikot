@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PinFeedback — הוספת הערות</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#0d0d0f;--bg1:#141416;--bg2:#1c1c1f;--bg3:#242428;--bg4:#2e2e33;
+  --line:#ffffff0f;--line2:#ffffff18;
+  --txt:#e8e8e8;--txt2:#9999a8;--txt3:#555562;
+  --accent:#6c6cff;--accent-h:#5757ee;--accent-bg:#6c6cff14;
+  --red:#ff5555;--green:#4cde80;
+  --radius:8px;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+body{background:var(--bg0);color:var(--txt);font-family:var(--font);font-size:13px;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* Topbar */
+.topbar{height:44px;background:var(--bg1);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.logo-row{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:-.2px}
+.logo-mark{width:22px;height:22px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
+.sep{width:1px;height:18px;background:var(--line2)}
+.proj-info{font-size:12px;color:var(--txt2)}
+.spacer{flex:1}
+.hint-pill{font-size:11px;color:var(--txt3);background:var(--bg3);padding:4px 10px;border-radius:20px;font-family:monospace}
+
+/* Entry screen */
+#entry-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+.entry-card{width:100%;max-width:360px;background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:20px}
+.entry-card h2{font-size:18px;font-weight:600;letter-spacing:-.3px}
+.entry-card p{font-size:12px;color:var(--txt2);line-height:1.6;margin-top:-12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3)}
+.field input{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--radius);padding:9px 12px;color:var(--txt);font-size:14px;font-family:monospace;outline:none;transition:border-color .15s;direction:ltr;text-align:center;letter-spacing:.12em}
+.field input:focus{border-color:var(--accent)}
+.field input::placeholder{color:var(--txt3);font-family:var(--font);font-size:12px;letter-spacing:0}
+.err-msg{font-size:11px;color:var(--red);text-align:center;display:none;margin-top:-10px}
+.btn-full{background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:background .15s;width:100%}
+.btn-full:hover{background:var(--accent-h)}
+.btn-full:disabled{opacity:.5;cursor:not-allowed}
+
+/* App */
+#app{display:none;flex:1;flex-direction:column;overflow:hidden;height:100vh}
+.body{flex:1;display:flex;overflow:hidden}
+
+/* Canvas */
+.canvas-main{flex:1;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.img-wrap{position:relative;width:100%;max-width:960px;border-radius:10px;overflow:hidden;border:1px solid var(--line);cursor:crosshair;user-select:none}
+.img-wrap img{width:100%;height:auto;display:block;pointer-events:none}
+.no-image{width:100%;max-width:960px;aspect-ratio:16/9;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:13px}
+
+/* Ann panel */
+.ann-panel{width:248px;border-left:1px solid var(--line);background:var(--bg1);display:flex;flex-direction:column;flex-shrink:0}
+.ann-hdr{padding:11px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ann-hdr .title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3)}
+.ann-hdr .cnt{font-size:11px;color:var(--txt3);font-family:monospace;background:var(--bg3);padding:1px 7px;border-radius:10px}
+.ann-list{flex:1;overflow-y:auto}
+.ann-list::-webkit-scrollbar{width:3px}
+.ann-list::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.ann-empty{padding:28px 14px;text-align:center;font-size:12px;color:var(--txt3);line-height:1.7}
+.ann-item{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.ann-num{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.ann-body{flex:1;min-width:0}
+.ann-text{font-size:12px;color:var(--txt2);line-height:1.5;word-break:break-word}
+.saved-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--green);margin-top:3px}
+
+/* Pins */
+.pin-w{position:absolute;pointer-events:all}
+.pin-dot{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;cursor:default;z-index:10;transition:transform .12s;box-shadow:0 0 0 2px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.4)}
+.pin-stem{position:absolute;left:50%;transform:translateX(-50%);top:11px;width:1.5px;height:7px;opacity:.6}
+.pin-popup{position:absolute;z-index:20;min-width:196px;top:50%;transform:translateY(-50%)}
+.pin-popup.r{left:12px}.pin-popup.l{right:12px}
+.popup-box{background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.popup-box textarea{background:transparent;color:var(--txt);font-size:12px;resize:none;outline:none;border:none;width:100%;font-family:var(--font);line-height:1.5;direction:rtl}
+.popup-box textarea::placeholder{color:var(--txt3)}
+.popup-btns{display:flex;gap:6px}
+.pbtn{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:none;font-family:var(--font);transition:all .12s}
+.pbtn.s{background:var(--accent);color:#fff}.pbtn.s:hover{background:var(--accent-h)}
+.pbtn.c{background:transparent;color:var(--txt3)}.pbtn.c:hover{color:var(--red)}
+.pin-tip{position:absolute;z-index:20;min-width:150px;max-width:220px;top:50%;transform:translateY(-50%);pointer-events:none;display:none}
+.pin-tip.r{left:12px}.pin-tip.l{right:12px}
+.tip-box{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--txt2);line-height:1.5;word-break:break-word;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+
+/* Loading */
+.loading-screen{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;color:var(--txt3)}
+.spin{width:16px;height:16px;border:2px solid var(--bg4);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Saving indicator */
+.saving-ind{font-size:11px;color:var(--txt3);display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .2s}
+.saving-ind.show{opacity:1}
+.saving-ind .spin{width:10px;height:10px;border-width:1.5px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:8px 16px;font-size:12px;color:var(--txt);box-shadow:0 4px 16px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ENTRY -->
+<div id="entry-screen">
+  <div class="entry-card">
+    <div style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;letter-spacing:-.3px">
+      <div class="logo-mark"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="15"/></svg></div>
+      PinFeedback
+    </div>
+    <div>
+      <h2>הוספת הערות</h2>
+      <p style="margin-top:6px">הזן את הקוד שקיבלת מהגרפיקאי.</p>
+    </div>
+    <div class="field">
+      <label>קוד גישה</label>
+      <input type="text" id="code-inp" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off" spellcheck="false"/>
+    </div>
+    <div class="err-msg" id="code-err">קוד לא נמצא. בדוק שוב.</div>
+    <button class="btn-full" id="enter-btn">כניסה →</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loading-screen" style="display:none">
+  <div class="spin"></div>
+  <span>טוען...</span>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="logo-row">
+      <div class="logo-mark"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="15"/></svg></div>
+      PinFeedback
+    </div>
+    <div class="sep"></div>
+    <span class="proj-info" id="proj-info"></span>
+    <div class="spacer"></div>
+    <div class="saving-ind" id="saving-ind">
+      <div class="spin"></div>
+      <span>שומר...</span>
+    </div>
+    <span class="hint-pill" id="hint-pill">לחץ על התמונה להוספת הערה</span>
+  </div>
+  <div class="body">
+    <div class="canvas-main" id="canvas-main"></div>
+    <div class="ann-panel">
+      <div class="ann-hdr"><span class="title">ההערות שלי</span><span class="cnt" id="ann-cnt">0</span></div>
+      <div class="ann-list" id="ann-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  ⚙️  CONFIG — אין צורך לשנות כלום כאן
+// ══════════════════════════════════════════════
+const STORAGE_KEY = 'pf_projects_v1';
+// ══════════════════════════════════════════════
+
+const PIN_COLORS = ['#818cf8','#f87171','#34d399','#fbbf24','#a78bfa','#fb7185','#38bdf8','#4ade80'];
+
+let currentTab = null;
+let activePinId = null;
+let saveTimer = null;
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,dur=2000){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),dur);}
+
+// ── Auto-format code input ──
+document.getElementById('code-inp').addEventListener('input', function(){
+  let v = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(v.length > 4) v = v.slice(0,4) + '-' + v.slice(4,8);
+  this.value = v;
+});
+
+// ── Entry ──
+document.getElementById('enter-btn').onclick = tryEnter;
+document.getElementById('code-inp').addEventListener('keydown', e => { if(e.key==='Enter') tryEnter(); });
+
+// Check URL param on load
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if(code) { document.getElementById('code-inp').value = code; tryEnter(); }
+});
+
+async function tryEnter(){
+  const code = document.getElementById('code-inp').value.trim().toUpperCase();
+  const err = document.getElementById('code-err');
+  if(!code){ err.style.display='block'; err.textContent='הזן קוד'; return; }
+
+  document.getElementById('entry-screen').style.display='none';
+  document.getElementById('loading-screen').style.display='flex';
+
+  // Load index from storage
+  let tab = null;
+  try {
+    const ir = await window.storage.get(STORAGE_KEY + '_index');
+    if(ir && ir.value){
+      const index = JSON.parse(ir.value);
+      for(const pi of index){
+        for(const tid of pi.tabIds){
+          try{
+            const tr = await window.storage.get(STORAGE_KEY + '_tab_' + tid);
+            if(tr && tr.value){
+              const t = JSON.parse(tr.value);
+              if(t.code === code){
+                // load image
+                try{
+                  const imgr = await window.storage.get(STORAGE_KEY + '_img_' + tid);
+                  if(imgr && imgr.value) t.imageData = imgr.value;
+                }catch(e){}
+                t._projName = pi.name;
+                tab = t;
+                break;
+              }
+            }
+          }catch(e){}
+          if(tab) break;
+        }
+        if(tab) break;
+      }
+    }
+  } catch(e){}
+
+  document.getElementById('loading-screen').style.display='none';
+
+  if(!tab){
+    document.getElementById('entry-screen').style.display='flex';
+    err.style.display='block'; err.textContent='קוד לא נמצא. בדוק שוב.';
+    return;
+  }
+
+  currentTab = tab;
+  document.getElementById('app').style.display='flex';
+  document.getElementById('proj-info').textContent = (tab._projName||'') + (tab.name ? ' · ' + tab.name : '');
+  renderAll();
+}
+
+async function persistAnnotations(){
+  if(!currentTab) return;
+  // show saving indicator
+  const ind = document.getElementById('saving-ind');
+  ind.classList.add('show');
+  try{
+    const data = { id: currentTab.id, name: currentTab.name, code: currentTab.code, annotations: currentTab.annotations||[] };
+    await window.storage.set(STORAGE_KEY + '_tab_' + currentTab.id, JSON.stringify(data));
+  }catch(e){ console.error(e); }
+  ind.classList.remove('show');
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persistAnnotations, 800);
+}
+
+function renderAll(){
+  renderCanvas();
+  renderAnnotations();
+}
+
+function renderCanvas(){
+  const main = document.getElementById('canvas-main');
+  main.innerHTML = '';
+
+  if(!currentTab.imageData){
+    const nd = document.createElement('div'); nd.className='no-image';
+    nd.textContent='הגרפיקאי טרם העלה תמונה לכרטיסייה זו';
+    main.appendChild(nd); return;
+  }
+
+  const wrap = document.createElement('div'); wrap.className='img-wrap';
+  const img = document.createElement('img'); img.src=currentTab.imageData; img.draggable=false;
+  wrap.appendChild(img);
+
+  (currentTab.annotations||[]).filter(a=>a.saved).forEach(ann => renderPin(wrap, ann));
+  if(activePinId){
+    const a = (currentTab.annotations||[]).find(a=>a.id===activePinId);
+    if(a && !a.saved) renderPin(wrap, a);
+  }
+
+  wrap.addEventListener('click', e => {
+    if(e.target.closest('[data-pin]')) return;
+    const rect = wrap.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    if(activePinId) commitDraft(activePinId, true);
+    const id = uid();
+    const saved = (currentTab.annotations||[]).filter(a=>a.saved);
+    currentTab.annotations = currentTab.annotations || [];
+    currentTab.annotations.push({ id, x, y, text:'', saved:false, color: PIN_COLORS[saved.length % PIN_COLORS.length], number: saved.length+1 });
+    activePinId = id;
+    updateHint(); renderAll();
+    setTimeout(() => document.querySelector(`[data-pin="${id}"] textarea`)?.focus(), 30);
+  });
+
+  main.appendChild(wrap);
+}
+
+function renderPin(wrap, ann){
+  const pl = ann.x > 68;
+  const pw = document.createElement('div'); pw.className='pin-w'; pw.dataset.pin=ann.id;
+  pw.style.left=ann.x+'%'; pw.style.top=ann.y+'%';
+  const dot = document.createElement('div'); dot.className='pin-dot'; dot.style.background=ann.color; dot.textContent=ann.number;
+  dot.onclick = e => e.stopPropagation();
+  const stem = document.createElement('div'); stem.className='pin-stem'; stem.style.background=ann.color;
+  pw.appendChild(dot); pw.appendChild(stem);
+
+  if(activePinId === ann.id){
+    const pop = document.createElement('div'); pop.className='pin-popup '+(pl?'l':'r');
+    pop.innerHTML=`<div class="popup-box"><textarea rows="2" placeholder="הוסף הערה..." dir="rtl"></textarea><div class="popup-btns"><button class="pbtn s">שמור ↵</button><button class="pbtn c">בטל</button></div></div>`;
+    pop.addEventListener('click', e => e.stopPropagation());
+    const ta = pop.querySelector('textarea'); ta.value = ann.text||'';
+    ta.addEventListener('input', () => { ann.text = ta.value; });
+    ta.addEventListener('keydown', e => {
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); commitDraft(ann.id, false); }
+      if(e.key==='Escape') cancelPin(ann.id);
+    });
+    pop.querySelector('.pbtn.s').onclick = () => commitDraft(ann.id, false);
+    pop.querySelector('.pbtn.c').onclick = () => cancelPin(ann.id);
+    pw.appendChild(pop);
+  } else if(ann.saved){
+    const tip = document.createElement('div'); tip.className='pin-tip '+(pl?'l':'r');
+    tip.innerHTML=`<div class="tip-box">${esc(ann.text)}</div>`;
+    pw.addEventListener('mouseenter', () => tip.style.display='block');
+    pw.addEventListener('mouseleave', () => tip.style.display='none');
+    pw.appendChild(tip);
+  }
+  wrap.appendChild(pw);
+}
+
+function commitDraft(id, silent){
+  const ann = (currentTab.annotations||[]).find(a=>a.id===id);
+  if(!ann) return;
+  if(!ann.text?.trim()){ cancelPin(id); return; }
+  ann.text = ann.text.trim(); ann.saved = true;
+  activePinId = null;
+  updateHint(); renderAll(); scheduleSave();
+  if(!silent) toast('✓ הערה נשמרה');
+}
+
+function cancelPin(id){
+  currentTab.annotations = (currentTab.annotations||[]).filter(a=>a.id!==id).map((a,i)=>({...a,number:i+1}));
+  activePinId = null;
+  updateHint(); renderAll();
+}
+
+function renderAnnotations(){
+  const list = document.getElementById('ann-list');
+  const cnt = document.getElementById('ann-cnt');
+  list.innerHTML = '';
+  const saved = (currentTab?.annotations||[]).filter(a=>a.saved);
+  cnt.textContent = saved.length;
+  if(!saved.length){ list.innerHTML='<div class="ann-empty">לחץ על התמונה<br>להוספת הערה ראשונה</div>'; return; }
+  saved.forEach(ann => {
+    const el = document.createElement('div'); el.className='ann-item';
+    el.innerHTML=`<div class="ann-num" style="background:${ann.color}">${ann.number}</div><div class="ann-body"><div class="ann-text">${esc(ann.text)}</div><div class="saved-badge">✓ נשמר</div></div>`;
+    list.appendChild(el);
+  });
+}
+
+function updateHint(){
+  document.getElementById('hint-pill').textContent = activePinId ? '↵ שמור · Esc בטל' : 'לחץ על התמונה להוספת הערה';
+}
+</script>
+</body>
+</html>
