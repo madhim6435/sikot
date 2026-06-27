@@ -5,276 +5,192 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>PinFeedback — לוח בקרה</title>
 <style>
-/* ── Reset & Base ── */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg0:#0d0d0f;
-  --bg1:#141416;
-  --bg2:#1c1c1f;
-  --bg3:#242428;
-  --bg4:#2e2e33;
-  --line:#ffffff0f;
-  --line2:#ffffff1a;
-  --txt:#e8e8e8;
-  --txt2:#9999a8;
-  --txt3:#555562;
-  --accent:#6c6cff;
-  --accent-h:#5757ee;
-  --accent-bg:#6c6cff14;
-  --red:#ff5555;
-  --green:#4cde80;
-  --radius:8px;
-  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --bg0:#0d0d0f;--bg1:#141416;--bg2:#1c1c1f;--bg3:#242428;--bg4:#2e2e33;
+  --line:#ffffff0f;--line2:#ffffff18;
+  --txt:#e8e8e8;--txt2:#9999a8;--txt3:#555562;
+  --accent:#6c6cff;--accent-h:#5757ee;--accent-bg:#6c6cff14;
+  --red:#ff5555;--green:#4cde80;
+  --radius:8px;--font:'Inter',system-ui,sans-serif;
 }
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
 body{background:var(--bg0);color:var(--txt);font-family:var(--font);font-size:13px;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-
-/* ── Login Screen ── */
 #login-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
-.login-card{width:100%;max-width:340px;background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:24px}
-.login-logo{display:flex;align-items:center;gap:10px}
-.login-logo .mark{width:32px;height:32px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.login-logo .mark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
-.login-logo span{font-size:15px;font-weight:600;letter-spacing:-.3px}
-.login-card h2{font-size:18px;font-weight:600;letter-spacing:-.3px}
-.login-card p{font-size:12px;color:var(--txt2);line-height:1.5;margin-top:-16px}
+.login-card{width:100%;max-width:340px;background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:20px}
+.logo-row{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;letter-spacing:-.3px}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
 .field{display:flex;flex-direction:column;gap:6px}
-.field label{font-size:11px;color:var(--txt2);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
-.field input{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--radius);padding:9px 12px;color:var(--txt);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;direction:ltr;text-align:center;letter-spacing:.1em}
+.field label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3)}
+.field input{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--radius);padding:9px 12px;color:var(--txt);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;direction:ltr}
 .field input:focus{border-color:var(--accent)}
-.field input::placeholder{color:var(--txt3);letter-spacing:0;text-align:right}
-.err{font-size:11px;color:var(--red);text-align:center;display:none}
-.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:background .15s;width:100%}
-.btn-primary:hover{background:var(--accent-h)}
-
-/* ── App (hidden until login) ── */
+.field input::placeholder{color:var(--txt3);direction:rtl}
+.err-msg{font-size:11px;color:var(--red);text-align:center;display:none;margin-top:-8px}
+.btn-full{background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:background .15s;width:100%}
+.btn-full:hover{background:var(--accent-h)}
 #app{display:none;flex:1;flex-direction:column;overflow:hidden;height:100vh}
-
-/* ── Topbar ── */
-.topbar{height:44px;background:var(--bg1);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.topbar{height:44px;background:var(--bg1);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
 .topbar-logo{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:-.2px}
 .topbar-logo .mark{width:22px;height:22px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.topbar-logo .mark svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
-.topbar-sep{width:1px;height:18px;background:var(--line2);margin:0 4px}
-.project-sel{display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;color:var(--txt2);font-size:12px;transition:background .15s;border:none;background:transparent;font-family:var(--font)}
-.project-sel:hover{background:var(--bg3)}
-.project-sel svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.topbar-spacer{flex:1}
-.btn-sm{background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:5px 10px;color:var(--txt2);font-size:11px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.topbar-logo .mark svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
+.sep{width:1px;height:18px;background:var(--line2)}
+.spacer{flex:1}
+.btn-sm{background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:5px 11px;color:var(--txt2);font-size:11px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
 .btn-sm:hover{background:var(--bg4);color:var(--txt)}
-.btn-sm.accent{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
-.btn-sm.accent:hover{background:var(--accent);color:#fff}
-
-/* ── Layout ── */
-.body-wrap{flex:1;display:flex;overflow:hidden}
-
-/* ── Left Sidebar ── */
-.sidebar{width:220px;background:var(--bg1);border-left:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
-.sidebar-sect{padding:10px 8px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3)}
-.sidebar-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;color:var(--txt2);font-size:12px;margin:0 4px;transition:all .15s;user-select:none}
-.sidebar-item:hover{background:var(--bg3);color:var(--txt)}
-.sidebar-item.active{background:var(--bg3);color:var(--txt)}
-.sidebar-item svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.sidebar-item .badge{margin-right:auto;background:var(--bg4);color:var(--txt3);font-size:10px;padding:1px 6px;border-radius:10px;font-family:monospace}
-.sidebar-new{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;color:var(--txt3);font-size:12px;margin:0 4px;transition:all .15s;border:none;background:transparent;width:calc(100% - 8px);font-family:var(--font);text-align:right}
-.sidebar-new:hover{color:var(--accent)}
-.sidebar-new svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.sidebar-bottom{margin-top:auto;padding:8px;border-top:1px solid var(--line)}
-.logout-btn{width:100%;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--txt3);font-size:12px;background:transparent;border:none;font-family:var(--font);transition:all .15s}
-.logout-btn:hover{color:var(--red);background:rgba(255,85,85,.06)}
-.logout-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-
-/* ── Main Content ── */
+.btn-sm.acc{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.btn-sm.acc:hover{background:var(--accent);color:#fff}
+.body{flex:1;display:flex;overflow:hidden}
+.sidebar{width:216px;background:var(--bg1);border-left:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0}
+.sb-sect{padding:12px 12px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3)}
+.sb-list{flex:1;overflow-y:auto;padding:0 4px}
+.sb-list::-webkit-scrollbar{width:3px}
+.sb-list::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--txt2);font-size:12px;transition:all .15s;user-select:none}
+.sb-item:hover{background:var(--bg3);color:var(--txt)}
+.sb-item.active{background:var(--bg3);color:var(--txt)}
+.sb-item svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;opacity:.6}
+.sb-item .sb-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-item .sb-badge{background:var(--bg4);color:var(--txt3);font-size:10px;padding:1px 6px;border-radius:10px;font-family:monospace;flex-shrink:0}
+.sb-bottom{padding:8px;border-top:1px solid var(--line)}
+.sb-out{width:100%;display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;color:var(--txt3);font-size:12px;background:transparent;border:none;font-family:var(--font);transition:all .15s}
+.sb-out:hover{color:var(--red);background:rgba(255,85,85,.06)}
+.sb-out svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-
-/* ── Tab Bar ── */
-.tab-bar{height:36px;background:var(--bg1);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 12px;gap:2px;flex-shrink:0;overflow-x:auto}
+.no-proj{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:var(--txt3)}
+.no-proj svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;opacity:.3}
+.no-proj p{font-size:13px}
+.tab-bar{height:36px;background:var(--bg1);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 8px;gap:1px;flex-shrink:0;overflow-x:auto}
 .tab-bar::-webkit-scrollbar{height:0}
-.tab{padding:4px 10px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--txt3);white-space:nowrap;transition:all .15s;position:relative;display:flex;align-items:center;gap:6px}
+.tab{padding:4px 10px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--txt3);white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:5px}
 .tab:hover{color:var(--txt2)}
 .tab.active{background:var(--bg3);color:var(--txt)}
-.tab .tab-close{opacity:0;width:14px;height:14px;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all .12s}
-.tab:hover .tab-close{opacity:1}
-.tab .tab-close:hover{background:var(--bg4)}
-.tab .tab-close svg{width:9px;height:9px;fill:none;stroke:var(--txt2);stroke-width:2;stroke-linecap:round}
-.tab-add-btn{padding:4px 6px;color:var(--txt3);cursor:pointer;font-size:16px;line-height:1;border-radius:5px;transition:all .15s;margin-right:2px}
-.tab-add-btn:hover{color:var(--txt);background:var(--bg3)}
-
-/* ── Canvas Area ── */
-.canvas-area{flex:1;display:flex;overflow:hidden}
-
+.tab-x{opacity:0;width:13px;height:13px;display:flex;align-items:center;justify-content:center;border-radius:3px}
+.tab:hover .tab-x{opacity:1}
+.tab-x:hover{background:var(--bg4)}
+.tab-x svg{width:8px;height:8px;fill:none;stroke:var(--txt2);stroke-width:2;stroke-linecap:round}
+.tab-plus{padding:3px 7px;color:var(--txt3);cursor:pointer;font-size:16px;line-height:1;border-radius:5px;transition:all .15s}
+.tab-plus:hover{color:var(--txt);background:var(--bg3)}
+.canvas-wrap{flex:1;display:flex;overflow:hidden}
 .canvas-main{flex:1;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-.canvas-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:960px}
-.canvas-hint{font-size:11px;color:var(--txt3);font-family:monospace}
-
+.c-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:960px}
+.c-hint{font-size:11px;color:var(--txt3);font-family:monospace}
 .upload-zone{width:100%;max-width:960px;aspect-ratio:16/9;border:1px dashed var(--line2);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .2s;color:var(--txt3)}
 .upload-zone:hover{border-color:var(--accent);background:var(--accent-bg);color:var(--txt2)}
 .upload-zone svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 .upload-zone p{font-size:13px}
 .upload-zone p span{color:var(--accent)}
-.upload-zone small{font-size:11px}
-
+.upload-zone small{font-size:11px;color:var(--txt3)}
 .img-wrap{position:relative;width:100%;max-width:960px;border-radius:10px;overflow:hidden;border:1px solid var(--line);cursor:crosshair;user-select:none}
 .img-wrap img{width:100%;height:auto;display:block;pointer-events:none}
-
-/* ── Share Bar ── */
 .share-bar{width:100%;max-width:960px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.share-bar .label{font-size:11px;color:var(--txt3)}
+.share-label{font-size:11px;color:var(--txt3)}
 .share-code{background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:5px 12px;font-family:monospace;font-size:13px;color:var(--txt);letter-spacing:.08em;cursor:pointer;transition:all .15s;font-weight:600}
 .share-code:hover{border-color:var(--accent);color:var(--accent)}
-.share-hint{font-size:11px;color:var(--txt3)}
-.client-url{font-size:11px;color:var(--txt3);display:flex;align-items:center;gap:6px}
-.client-url span{color:var(--txt2);font-family:monospace;font-size:11px}
-
-/* ── Annotation Sidebar ── */
-.ann-panel{width:252px;border-left:1px solid var(--line);background:var(--bg1);display:flex;flex-direction:column;flex-shrink:0}
-.ann-panel-hdr{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-.ann-panel-hdr .title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3)}
-.ann-panel-hdr .count{font-size:11px;color:var(--txt3);font-family:monospace;background:var(--bg3);padding:1px 7px;border-radius:10px}
+.ann-panel{width:248px;border-left:1px solid var(--line);background:var(--bg1);display:flex;flex-direction:column;flex-shrink:0}
+.ann-hdr{padding:11px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ann-hdr .title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3)}
+.ann-hdr .cnt{font-size:11px;color:var(--txt3);font-family:monospace;background:var(--bg3);padding:1px 7px;border-radius:10px}
 .ann-list{flex:1;overflow-y:auto}
-.ann-list::-webkit-scrollbar{width:4px}
-.ann-list::-webkit-scrollbar-track{background:transparent}
+.ann-list::-webkit-scrollbar{width:3px}
 .ann-list::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 .ann-empty{padding:28px 14px;text-align:center;font-size:12px;color:var(--txt3);line-height:1.7}
-.ann-item{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .12s;position:relative}
+.ann-item{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;border-bottom:1px solid var(--line);transition:background .1s}
 .ann-item:hover{background:var(--bg2)}
-.ann-num{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
-.ann-content{flex:1;min-width:0}
+.ann-num{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.ann-body{flex:1;min-width:0}
 .ann-text{font-size:12px;color:var(--txt2);line-height:1.5;word-break:break-word}
 .ann-meta{font-size:10px;color:var(--txt3);font-family:monospace;margin-top:2px}
 .ann-del{opacity:0;background:none;border:none;cursor:pointer;color:var(--txt3);padding:2px;border-radius:4px;transition:all .12s;flex-shrink:0}
 .ann-item:hover .ann-del{opacity:1}
-.ann-del:hover{color:var(--red);background:rgba(255,85,85,.1)}
+.ann-del:hover{color:var(--red)}
 .ann-del svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.ann-footer{padding:10px 14px;border-top:1px solid var(--line)}
-.copy-btn{width:100%;background:none;border:none;cursor:pointer;font-size:11px;color:var(--txt3);padding:6px;border-radius:6px;font-family:monospace;transition:all .15s;text-align:center}
-.copy-btn:hover{background:var(--bg3);color:var(--txt)}
-
-/* ── Pins ── */
+.ann-foot{padding:9px 14px;border-top:1px solid var(--line)}
+.copy-all{width:100%;background:none;border:none;cursor:pointer;font-size:11px;color:var(--txt3);padding:5px;border-radius:6px;font-family:monospace;transition:all .15s}
+.copy-all:hover{background:var(--bg3);color:var(--txt)}
 .pin-w{position:absolute;pointer-events:all}
-.pin-dot{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;cursor:pointer;z-index:10;transition:transform .12s;box-shadow:0 0 0 2px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.4)}
-.pin-dot:hover,.pin-dot.active{transform:translate(-50%,-50%) scale(1.2)}
-.pin-stem{position:absolute;left:50%;transform:translateX(-50%);top:11px;width:1.5px;height:7px;opacity:.7}
+.pin-dot{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;cursor:default;z-index:10;transition:transform .12s;box-shadow:0 0 0 2px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.4)}
+.pin-stem{position:absolute;left:50%;transform:translateX(-50%);top:11px;width:1.5px;height:7px;opacity:.6}
 .pin-popup{position:absolute;z-index:20;min-width:196px;top:50%;transform:translateY(-50%)}
 .pin-popup.r{left:12px}.pin-popup.l{right:12px}
-.popup-inner{background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-.popup-inner textarea{background:transparent;color:var(--txt);font-size:12px;resize:none;outline:none;border:none;width:100%;font-family:var(--font);line-height:1.5;direction:rtl}
-.popup-inner textarea::placeholder{color:var(--txt3)}
-.popup-actions{display:flex;gap:6px}
+.popup-box{background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.popup-box textarea{background:transparent;color:var(--txt);font-size:12px;resize:none;outline:none;border:none;width:100%;font-family:var(--font);line-height:1.5;direction:rtl}
+.popup-box textarea::placeholder{color:var(--txt3)}
+.popup-btns{display:flex;gap:6px}
 .pbtn{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:none;font-family:var(--font);transition:all .12s}
-.pbtn.s{background:var(--accent);color:#fff}
-.pbtn.s:hover{background:var(--accent-h)}
-.pbtn.c{background:transparent;color:var(--txt3)}
-.pbtn.c:hover{color:var(--red)}
+.pbtn.s{background:var(--accent);color:#fff}.pbtn.s:hover{background:var(--accent-h)}
+.pbtn.c{background:transparent;color:var(--txt3)}.pbtn.c:hover{color:var(--red)}
 .pin-tip{position:absolute;z-index:20;min-width:150px;max-width:220px;top:50%;transform:translateY(-50%);pointer-events:none;display:none}
 .pin-tip.r{left:12px}.pin-tip.l{right:12px}
-.tip-inner{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--txt2);line-height:1.5;word-break:break-word;box-shadow:0 4px 16px rgba(0,0,0,.4)}
-
-/* ── Project List (no tabs selected) ── */
-.empty-state{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:var(--txt3)}
-.empty-state svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;opacity:.4}
-.empty-state p{font-size:13px}
-
-/* ── Rename input on tab ── */
-.tab-rename{background:transparent;border:none;outline:none;color:var(--txt);font-family:var(--font);font-size:11px;width:70px}
-
-/* ── Toast ── */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:8px 16px;font-size:12px;color:var(--txt);box-shadow:0 4px 16px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap}
+.tip-box{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--txt2);line-height:1.5;word-break:break-word;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.loading{position:fixed;inset:0;background:var(--bg0);display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;color:var(--txt3);z-index:999}
+.spin{width:16px;height:16px;border:2px solid var(--bg4);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:8px 16px;font-size:12px;color:var(--txt);box-shadow:0 4px 16px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999;white-space:nowrap}
 .toast.show{opacity:1}
-
-/* ── Modal ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(2px)}
-.modal-bg.show{display:flex}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(3px)}
+.modal-bg.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:24px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:16px;box-shadow:0 16px 48px rgba(0,0,0,.6)}
-.modal h3{font-size:14px;font-weight:600}
-.modal input{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--radius);padding:9px 12px;color:var(--txt);font-size:13px;font-family:var(--font);outline:none;width:100%;transition:border-color .15s;direction:rtl}
-.modal input:focus{border-color:var(--accent)}
-.modal-btns{display:flex;gap:8px;justify-content:flex-start}
-.modal p{font-size:12px;color:var(--txt2);line-height:1.5}
-
-/* ── No project selected ── */
-#no-project-msg{flex:1;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--txt3)}
+.modal h3{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.modal-btns{display:flex;gap:8px}
+.tab-rename-inp{background:transparent;border:none;outline:none;color:var(--txt);font-family:var(--font);font-size:11px;width:70px}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">
-      <div class="mark">
-        <svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="14.5"/></svg>
-      </div>
-      <span>PinFeedback</span>
+    <div class="logo-row">
+      <div class="logo-mark"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="15"/></svg></div>
+      PinFeedback
     </div>
-    <div>
-      <h2>לוח בקרה</h2>
-      <p style="margin-top:6px">הכנס סיסמה כדי להמשיך.</p>
-    </div>
+    <h2 style="font-size:18px;font-weight:600;letter-spacing:-.3px">לוח בקרה</h2>
     <div class="field">
       <label>סיסמה</label>
-      <input type="password" id="pw-inp" placeholder="הכנס סיסמה" />
+      <input type="password" id="pw-inp" placeholder="הכנס סיסמה"/>
     </div>
-    <div class="err" id="pw-err">סיסמה שגויה</div>
-    <button class="btn-primary" id="pw-btn">כניסה</button>
+    <div class="err-msg" id="pw-err">סיסמה שגויה</div>
+    <button class="btn-full" id="pw-btn">כניסה →</button>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-logo">
-      <div class="mark"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="14.5"/></svg></div>
+      <div class="mark"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><line x1="8" y1="9.5" x2="8" y2="15"/></svg></div>
       PinFeedback
     </div>
-    <div class="topbar-sep"></div>
-    <button class="project-sel" id="proj-name-btn">
-      <span id="proj-name-label">בחר פרויקט</span>
-      <svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4"/></svg>
-    </button>
-    <div class="topbar-spacer"></div>
-    <button class="btn-sm accent" id="btn-new-proj">
-      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-      פרויקט חדש
-    </button>
+    <div class="sep"></div>
+    <span id="proj-label" style="font-size:12px;color:var(--txt2)">בחר פרויקט</span>
+    <div class="spacer"></div>
+    <button class="btn-sm acc" id="btn-new-proj">+ פרויקט חדש</button>
   </div>
-
-  <div class="body-wrap">
-    <!-- Sidebar: projects list -->
+  <div class="body">
     <div class="sidebar">
-      <div class="sidebar-sect">פרויקטים</div>
-      <div id="proj-list" style="overflow-y:auto;flex:1"></div>
-      <div class="sidebar-bottom">
-        <button class="logout-btn" id="logout-btn">
+      <div class="sb-sect">פרויקטים</div>
+      <div class="sb-list" id="sb-list"></div>
+      <div class="sb-bottom">
+        <button class="sb-out" id="btn-logout">
           <svg viewBox="0 0 16 16"><path d="M10 12v2H2V2h8v2"/><polyline points="7 8 14 8"/><polyline points="12 6 14 8 12 10"/></svg>
           יציאה
         </button>
       </div>
     </div>
-
-    <!-- Main -->
     <div class="main">
-      <div id="no-project-msg">
-        <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="4"/><line x1="12" y1="20" x2="28" y2="20"/><line x1="20" y1="12" x2="20" y2="28"/></svg>
-        <p>בחר פרויקט או צור פרויקט חדש</p>
-        <button class="btn-sm accent" onclick="openNewProjectModal()">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-          פרויקט חדש
-        </button>
+      <div class="no-proj" id="no-proj">
+        <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="4"/><line x1="13" y1="20" x2="27" y2="20"/><line x1="20" y1="13" x2="20" y2="27"/></svg>
+        <p>בחר פרויקט או צור חדש</p>
+        <button class="btn-sm acc" onclick="openNewProjModal()">+ פרויקט חדש</button>
       </div>
-      <div id="project-content" style="flex:1;display:none;flex-direction:column;overflow:hidden">
+      <div id="proj-ui" style="display:none;flex:1;flex-direction:column;overflow:hidden">
         <div class="tab-bar" id="tab-bar"></div>
-        <div class="canvas-area" id="canvas-area">
+        <div class="canvas-wrap">
           <div class="canvas-main" id="canvas-main"></div>
-          <div class="ann-panel" id="ann-panel">
-            <div class="ann-panel-hdr">
-              <span class="title">הערות</span>
-              <span class="count" id="ann-count">0</span>
-            </div>
+          <div class="ann-panel">
+            <div class="ann-hdr"><span class="title">הערות</span><span class="cnt" id="ann-cnt">0</span></div>
             <div class="ann-list" id="ann-list"></div>
-            <div class="ann-footer" id="ann-footer" style="display:none">
-              <button class="copy-btn" id="copy-btn">העתק הכל ←</button>
+            <div class="ann-foot" id="ann-foot" style="display:none">
+              <button class="copy-all" id="copy-all-btn">העתק הכל ←</button>
             </div>
           </div>
         </div>
@@ -283,470 +199,348 @@ body{background:var(--bg0);color:var(--txt);font-family:var(--font);font-size:13
   </div>
 </div>
 
-<!-- New Project Modal -->
-<div class="modal-bg" id="modal-new-proj">
+<div class="modal-bg" id="modal-proj">
   <div class="modal">
     <h3>פרויקט חדש</h3>
-    <div class="field">
-      <label>שם הפרויקט</label>
-      <input type="text" id="new-proj-name" placeholder="לדוגמה: לוגו חברת X" maxlength="40"/>
-    </div>
+    <div class="field"><label>שם הפרויקט</label><input type="text" id="proj-name-inp" placeholder="לוגו חברת X" maxlength="40"/></div>
     <div class="modal-btns">
-      <button class="btn-primary" style="width:auto;padding:8px 20px" id="confirm-new-proj">צור פרויקט</button>
-      <button class="btn-sm" id="cancel-new-proj">ביטול</button>
+      <button class="btn-full" style="padding:9px" id="confirm-proj">צור פרויקט</button>
+      <button class="btn-sm" id="cancel-proj" style="padding:9px 16px">ביטול</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script>
-// ─── CONFIG ───────────────────────────────────────────────
-const DASHBOARD_PASSWORD = '0534149995'; // ← שנה כאן
-const CLIENT_FILE = 'client.html';     // ← שם קובץ הלקוח
-// ──────────────────────────────────────────────────────────
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ══════════════════════════════════════════
+//  ⚙️  CONFIG — שנה כאן
+// ══════════════════════════════════════════
+const PASSWORD = 'CHANGEME';
+const firebaseConfig = {
+  apiKey: "AIzaSyBDzQgAmXhZfnOMM4bzi4aX5y58dh9oPdM",
+  authDomain: "sikot-e54b5.firebaseapp.com",
+  projectId: "sikot-e54b5",
+  storageBucket: "sikot-e54b5.firebasestorage.app",
+  messagingSenderId: "1077954926198",
+  appId: "1:1077954926198:web:c3dde24c9edc16a632f157"
+};
+// ══════════════════════════════════════════
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
 
 const PIN_COLORS = ['#818cf8','#f87171','#34d399','#fbbf24','#a78bfa','#fb7185','#38bdf8','#4ade80'];
 
-let state = {
-  projects: [],
-  activeProjectId: null,
-  activeTabId: null,
-  activePin: null,
-};
+let projects = [];
+let activeProjId = null;
+let activeTabId  = null;
+let activePin    = null;
+let unsubscribe  = null;
 
-// ── Storage ──
-async function save() {
-  try { await window.storage.set('pf_data', JSON.stringify(state)); } catch(e) {}
-}
-async function load() {
-  try {
-    const r = await window.storage.get('pf_data');
-    if (r && r.value) Object.assign(state, JSON.parse(r.value));
-  } catch(e) {}
-}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function genCode(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<8;i++){if(i===4)s+='-';s+=c[Math.floor(Math.random()*c.length)];}return s; }
+function esc(s){ return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(msg,dur=2000){ const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),dur); }
+function getProj(id){ return projects.find(p=>p.id===id); }
+function activeProj(){ return getProj(activeProjId); }
+function activeTab(){ const p=activeProj();return p?p.tabs.find(t=>t.id===activeTabId):null; }
 
-function getProj(id) { return state.projects.find(p => p.id === id); }
-function getActiveProj() { return getProj(state.activeProjectId); }
-function getActiveTab() {
-  const p = getActiveProj();
-  return p ? p.tabs.find(t => t.id === state.activeTabId) : null;
+function showLoading(on){
+  let el=document.getElementById('loading-overlay');
+  if(on){ if(!el){el=document.createElement('div');el.id='loading-overlay';el.className='loading';el.innerHTML='<div class="spin"></div><span>טוען...</span>';document.body.appendChild(el);} }
+  else { if(el)el.remove(); }
 }
 
-function uid() { return Math.random().toString(36).slice(2, 9); }
-function genCode() {
-  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s = '';
-  for (let i = 0; i < 8; i++) { if (i === 4) s += '-'; s += c[Math.floor(Math.random() * c.length)]; }
-  return s;
+// ── Firebase helpers ──
+async function saveProject(proj){
+  const data = { id:proj.id, name:proj.name, tabIds:proj.tabs.map(t=>t.id) };
+  await setDoc(doc(db,'projects',proj.id), data);
+  for(const tab of proj.tabs) await saveTab(tab);
 }
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function toast(msg, dur = 1800) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), dur);
+async function saveTab(tab){
+  const data = { id:tab.id, projId:tab.projId, name:tab.name, code:tab.code, annotations:tab.annotations||[] };
+  await setDoc(doc(db,'tabs',tab.id), data);
+  if(tab.imageData) await setDoc(doc(db,'images',tab.id), { data: tab.imageData });
+}
+async function loadProjects(){
+  const snap = await getDocs(collection(db,'projects'));
+  projects = [];
+  for(const d of snap.docs){
+    const p = d.data();
+    p.tabs = [];
+    for(const tid of (p.tabIds||[])){
+      try{
+        const tr = await getDoc(doc(db,'tabs',tid));
+        if(tr.exists()){
+          const tab = tr.data();
+          try{ const ir=await getDoc(doc(db,'images',tid));if(ir.exists())tab.imageData=ir.data().data; }catch(e){}
+          p.tabs.push(tab);
+        }
+      }catch(e){}
+    }
+    projects.push(p);
+  }
 }
 
 // ── Login ──
 document.getElementById('pw-btn').onclick = tryLogin;
-document.getElementById('pw-inp').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
-
-async function tryLogin() {
-  const val = document.getElementById('pw-inp').value;
-  if (val !== DASHBOARD_PASSWORD) {
-    document.getElementById('pw-err').style.display = 'block';
-    document.getElementById('pw-inp').focus();
-    return;
+document.getElementById('pw-inp').addEventListener('keydown',e=>{ if(e.key==='Enter')tryLogin(); });
+async function tryLogin(){
+  if(document.getElementById('pw-inp').value !== PASSWORD){
+    document.getElementById('pw-err').style.display='block'; return;
   }
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  await load();
-  if (state.projects.length && !state.activeProjectId) {
-    state.activeProjectId = state.projects[0].id;
-    state.activeTabId = state.projects[0].tabs[0]?.id;
-  }
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  showLoading(true);
+  await loadProjects();
+  showLoading(false);
+  if(projects.length && !activeProjId){ activeProjId=projects[0].id; activeTabId=projects[0].tabs[0]?.id; }
   render();
+  startLiveUpdates();
 }
-
-document.getElementById('logout-btn').onclick = () => {
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('pw-inp').value = '';
+document.getElementById('btn-logout').onclick=()=>{
+  if(unsubscribe) unsubscribe();
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('pw-inp').value='';
 };
 
-// ── New Project Modal ──
-function openNewProjectModal() {
-  document.getElementById('modal-new-proj').classList.add('show');
-  setTimeout(() => document.getElementById('new-proj-name').focus(), 50);
+// ── Live updates (see client annotations in real time) ──
+function startLiveUpdates(){
+  if(unsubscribe) unsubscribe();
+  unsubscribe = onSnapshot(collection(db,'tabs'), async snap => {
+    for(const change of snap.docChanges()){
+      if(change.type==='modified'){
+        const updated = change.doc.data();
+        for(const p of projects){
+          const t = p.tabs.find(t=>t.id===updated.id);
+          if(t){ t.annotations=updated.annotations||[]; }
+        }
+        if(updated.id===activeTabId){ renderAnnotations(); }
+      }
+    }
+  });
 }
-document.getElementById('btn-new-proj').onclick = openNewProjectModal;
-document.getElementById('cancel-new-proj').onclick = () => document.getElementById('modal-new-proj').classList.remove('show');
-document.getElementById('confirm-new-proj').onclick = createProject;
-document.getElementById('new-proj-name').addEventListener('keydown', e => { if (e.key === 'Enter') createProject(); });
 
-function createProject() {
-  const name = document.getElementById('new-proj-name').value.trim();
-  if (!name) return;
-  const tabId = uid();
-  const proj = {
-    id: uid(), name,
-    tabs: [{ id: tabId, name: 'כרטיסייה 1', code: genCode(), imageData: null, annotations: [] }]
-  };
-  state.projects.push(proj);
-  state.activeProjectId = proj.id;
-  state.activeTabId = tabId;
-  state.activePin = null;
-  document.getElementById('new-proj-name').value = '';
-  document.getElementById('modal-new-proj').classList.remove('show');
-  save(); render();
+// ── New Project Modal ──
+function openNewProjModal(){ document.getElementById('modal-proj').classList.add('open');setTimeout(()=>document.getElementById('proj-name-inp').focus(),50); }
+window.openNewProjModal = openNewProjModal;
+document.getElementById('btn-new-proj').onclick=openNewProjModal;
+document.getElementById('cancel-proj').onclick=()=>document.getElementById('modal-proj').classList.remove('open');
+document.getElementById('confirm-proj').onclick=createProject;
+document.getElementById('proj-name-inp').addEventListener('keydown',e=>{ if(e.key==='Enter')createProject(); });
+document.getElementById('modal-proj').onclick=function(e){ if(e.target===this)this.classList.remove('open'); };
+
+async function createProject(){
+  const name=document.getElementById('proj-name-inp').value.trim(); if(!name)return;
+  const tabId=uid();
+  const proj={ id:uid(), name, tabs:[{ id:tabId, name:'כרטיסייה 1', code:genCode(), imageData:null, annotations:[] }] };
+  proj.tabs[0].projId=proj.id;
+  projects.push(proj);
+  activeProjId=proj.id; activeTabId=tabId; activePin=null;
+  document.getElementById('proj-name-inp').value='';
+  document.getElementById('modal-proj').classList.remove('open');
+  await saveProject(proj);
+  render(); toast('✓ פרויקט נוצר');
 }
 
 // ── Render ──
-function render() {
+function render(){
   renderSidebar();
-  const hasProj = !!getActiveProj();
-  document.getElementById('no-project-msg').style.display = hasProj ? 'none' : 'flex';
-  document.getElementById('project-content').style.display = hasProj ? 'flex' : 'none';
-  if (!hasProj) return;
-  document.getElementById('proj-name-label').textContent = getActiveProj().name;
-  renderTabs();
-  renderCanvas();
-  renderAnnotations();
+  const p=activeProj();
+  document.getElementById('no-proj').style.display=p?'none':'flex';
+  document.getElementById('proj-ui').style.display=p?'flex':'none';
+  if(!p)return;
+  document.getElementById('proj-label').textContent=p.name;
+  renderTabs(); renderCanvas(); renderAnnotations();
 }
 
-function renderSidebar() {
-  const list = document.getElementById('proj-list');
-  list.innerHTML = '';
-  state.projects.forEach(p => {
-    const el = document.createElement('div');
-    el.className = 'sidebar-item' + (p.id === state.activeProjectId ? ' active' : '');
-    const annCount = p.tabs.reduce((s, t) => s + (t.annotations||[]).filter(a=>a.saved).length, 0);
-    el.innerHTML = `
-      <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="8" y1="5" x2="8" y2="11"/></svg>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</span>
-      <span class="badge">${annCount}</span>
-    `;
-    el.onclick = () => {
-      state.activeProjectId = p.id;
-      state.activeTabId = p.tabs[0]?.id;
-      state.activePin = null;
-      render(); save();
-    };
-    el.addEventListener('contextmenu', e => { e.preventDefault(); showProjCtx(e, p); });
+function renderSidebar(){
+  const list=document.getElementById('sb-list'); list.innerHTML='';
+  projects.forEach(p=>{
+    const annCount=p.tabs.reduce((s,t)=>s+(t.annotations||[]).filter(a=>a.saved).length,0);
+    const el=document.createElement('div');
+    el.className='sb-item'+(p.id===activeProjId?' active':'');
+    el.innerHTML=`<svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="8" y1="5" x2="8" y2="11"/></svg><span class="sb-name">${esc(p.name)}</span><span class="sb-badge">${annCount}</span>`;
+    el.onclick=()=>{ activeProjId=p.id;activeTabId=p.tabs[0]?.id;activePin=null;render(); };
+    el.addEventListener('contextmenu',e=>{ e.preventDefault(); showCtx(e,[
+      {label:'שנה שם',fn:async()=>{ const n=prompt('שם חדש:',p.name);if(n?.trim()){p.name=n.trim();await setDoc(doc(db,'projects',p.id),{id:p.id,name:p.name,tabIds:p.tabs.map(t=>t.id)});render();} }},
+      {label:'מחק פרויקט',danger:true,fn:async()=>{ if(!confirm('למחוק?'))return;for(const t of p.tabs){await deleteDoc(doc(db,'tabs',t.id));await deleteDoc(doc(db,'images',t.id)).catch(()=>{});}await deleteDoc(doc(db,'projects',p.id));projects=projects.filter(x=>x.id!==p.id);if(activeProjId===p.id){activeProjId=projects[0]?.id||null;activeTabId=projects[0]?.tabs[0]?.id||null;}render(); }},
+    ]); });
     list.appendChild(el);
   });
 }
 
-function renderTabs() {
-  const bar = document.getElementById('tab-bar');
-  bar.innerHTML = '';
-  const p = getActiveProj(); if (!p) return;
-  p.tabs.forEach(tab => {
-    const el = document.createElement('div');
-    el.className = 'tab' + (tab.id === state.activeTabId ? ' active' : '');
-    el.dataset.tabId = tab.id;
-    el.innerHTML = `
-      <span class="tab-label">${esc(tab.name)}</span>
-      <span class="tab-close" data-close="${tab.id}">
-        <svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg>
-      </span>`;
-    el.querySelector('.tab-label').onclick = () => { state.activeTabId = tab.id; state.activePin = null; render(); save(); };
-    el.querySelector('.tab-close').onclick = e => { e.stopPropagation(); closeTab(tab.id); };
-    el.addEventListener('dblclick', () => renameTab(tab));
-    el.addEventListener('contextmenu', e => { e.preventDefault(); showTabCtx(e, tab); });
+function renderTabs(){
+  const bar=document.getElementById('tab-bar'); bar.innerHTML='';
+  const p=activeProj(); if(!p)return;
+  p.tabs.forEach(tab=>{
+    const el=document.createElement('div');
+    el.className='tab'+(tab.id===activeTabId?' active':'');
+    el.dataset.id=tab.id;
+    el.innerHTML=`<span class="tab-lbl">${esc(tab.name)}</span><span class="tab-x"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></span>`;
+    el.querySelector('.tab-lbl').onclick=()=>{ activeTabId=tab.id;activePin=null;render(); };
+    el.querySelector('.tab-x').onclick=async e=>{ e.stopPropagation();if(p.tabs.length===1)return;await deleteDoc(doc(db,'tabs',tab.id));await deleteDoc(doc(db,'images',tab.id)).catch(()=>{});p.tabs=p.tabs.filter(t=>t.id!==tab.id);await setDoc(doc(db,'projects',p.id),{id:p.id,name:p.name,tabIds:p.tabs.map(t=>t.id)});if(activeTabId===tab.id)activeTabId=p.tabs[0].id;render(); };
+    el.addEventListener('dblclick',()=>{
+      const lbl=el.querySelector('.tab-lbl');const orig=tab.name;
+      lbl.innerHTML=`<input class="tab-rename-inp" value="${esc(orig)}" maxlength="30"/>`;
+      const inp=lbl.querySelector('input');inp.focus();inp.select();
+      const done=async()=>{ tab.name=inp.value.trim()||orig;await saveTab(tab);render(); };
+      inp.addEventListener('blur',done);
+      inp.addEventListener('keydown',e=>{ if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=orig;inp.blur();} });
+    });
+    el.addEventListener('contextmenu',e=>{ e.preventDefault();showCtx(e,[
+      {label:'שנה שם',fn:()=>el.dispatchEvent(new Event('dblclick'))},
+      {label:'העתק קוד שיתוף',fn:()=>{ navigator.clipboard.writeText(tab.code).catch(()=>{});toast('✓ קוד הועתק'); }},
+      {label:'מחק כרטיסייה',danger:true,fn:()=>el.querySelector('.tab-x').onclick(new Event('click'))},
+    ]); });
     bar.appendChild(el);
   });
-  const addBtn = document.createElement('div');
-  addBtn.className = 'tab-add-btn'; addBtn.textContent = '+'; addBtn.title = 'כרטיסייה חדשה';
-  addBtn.onclick = addTab;
-  bar.appendChild(addBtn);
-}
-
-function addTab() {
-  const p = getActiveProj(); if (!p) return;
-  const tabId = uid();
-  p.tabs.push({ id: tabId, name: 'כרטיסייה ' + (p.tabs.length + 1), code: genCode(), imageData: null, annotations: [] });
-  state.activeTabId = tabId; state.activePin = null;
-  render(); save();
-}
-
-function closeTab(id) {
-  const p = getActiveProj(); if (!p || p.tabs.length === 1) return;
-  p.tabs = p.tabs.filter(t => t.id !== id);
-  if (state.activeTabId === id) state.activeTabId = p.tabs[0].id;
-  render(); save();
-}
-
-function renameTab(tab) {
-  const tabEl = document.querySelector(`.tab[data-tab-id="${tab.id}"] .tab-label`) ||
-    [...document.querySelectorAll('.tab')].find(el => el.dataset.tabId === tab.id)?.querySelector('.tab-label');
-  if (!tabEl) return;
-  const orig = tab.name;
-  tabEl.innerHTML = `<input class="tab-rename" value="${esc(orig)}" maxlength="30"/>`;
-  const inp = tabEl.querySelector('input');
-  inp.focus(); inp.select();
-  const done = () => {
-    const v = inp.value.trim() || orig;
-    tab.name = v; render(); save();
+  const add=document.createElement('div');add.className='tab-plus';add.textContent='+';
+  add.onclick=async()=>{
+    const p=activeProj();const id=uid();
+    const tab={id,projId:p.id,name:'כרטיסייה '+(p.tabs.length+1),code:genCode(),imageData:null,annotations:[]};
+    p.tabs.push(tab);activeTabId=id;activePin=null;
+    await saveProject(p);render();
   };
-  inp.addEventListener('blur', done);
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); if (e.key === 'Escape') { inp.value = orig; inp.blur(); } });
+  bar.appendChild(add);
 }
 
-function renderCanvas() {
-  const main = document.getElementById('canvas-main');
-  main.innerHTML = '';
-  const tab = getActiveTab(); if (!tab) return;
-
-  // Top bar
-  const topBar = document.createElement('div');
-  topBar.className = 'canvas-topbar';
-  topBar.innerHTML = `
-    <span class="canvas-hint" id="hint-txt">${state.activePin ? '↵ שמור · Esc בטל' : 'לחץ על התמונה להוספת הערה'}</span>
-    <label style="font-size:11px;color:var(--txt3);cursor:pointer">
-      החלף תמונה
-      <input type="file" accept="image/*" style="display:none" id="swap-file">
-    </label>
-  `;
-  topBar.querySelector('#swap-file').addEventListener('change', e => handleFile(e, tab));
-  main.appendChild(topBar);
-
-  // Image or upload zone
-  if (tab.imageData) {
-    const wrap = document.createElement('div');
-    wrap.className = 'img-wrap'; wrap.id = 'img-wrap';
-    const img = document.createElement('img');
-    img.src = tab.imageData; img.draggable = false;
+function renderCanvas(){
+  const main=document.getElementById('canvas-main');main.innerHTML='';
+  const tab=activeTab();if(!tab)return;
+  const top=document.createElement('div');top.className='c-topbar';
+  top.innerHTML=`<span class="c-hint">${activePin?'↵ שמור · Esc בטל':'לחץ על התמונה להוספת הערה'}</span><label style="font-size:11px;color:var(--txt3);cursor:pointer">החלף תמונה<input type="file" accept="image/*" style="display:none" id="swap-file"></label>`;
+  top.querySelector('#swap-file').addEventListener('change',e=>handleFile(e,tab));
+  main.appendChild(top);
+  if(tab.imageData){
+    const wrap=document.createElement('div');wrap.className='img-wrap';
+    const img=document.createElement('img');img.src=tab.imageData;img.draggable=false;
     wrap.appendChild(img);
-
-    (tab.annotations||[]).filter(a => a.saved).forEach(ann => renderPin(wrap, ann, tab));
-    if (state.activePin) {
-      const a = (tab.annotations||[]).find(a => a.id === state.activePin);
-      if (a && !a.saved) renderPin(wrap, a, tab);
-    }
-
-    wrap.addEventListener('click', e => {
-      if (e.target.closest('[data-pin]')) return;
-      const rect = wrap.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      if (state.activePin) commitDraft(tab, state.activePin, true);
-      const id = uid();
-      const saved = (tab.annotations||[]).filter(a => a.saved);
-      const color = PIN_COLORS[saved.length % PIN_COLORS.length];
-      const number = saved.length + 1;
-      if (!tab.annotations) tab.annotations = [];
-      tab.annotations.push({ id, x, y, text: '', saved: false, color, number });
-      state.activePin = id;
-      render(); save();
-      setTimeout(() => { document.querySelector(`[data-pin="${id}"] textarea`)?.focus(); }, 30);
+    (tab.annotations||[]).filter(a=>a.saved).forEach(ann=>renderPin(wrap,ann,tab));
+    if(activePin){const a=(tab.annotations||[]).find(a=>a.id===activePin);if(a&&!a.saved)renderPin(wrap,a,tab);}
+    wrap.addEventListener('click',e=>{
+      if(e.target.closest('[data-pin]'))return;
+      const rect=wrap.getBoundingClientRect();
+      const x=((e.clientX-rect.left)/rect.width)*100;
+      const y=((e.clientY-rect.top)/rect.height)*100;
+      if(activePin)commitDraft(tab,activePin,true);
+      const id=uid();const saved=(tab.annotations||[]).filter(a=>a.saved);
+      tab.annotations=tab.annotations||[];
+      tab.annotations.push({id,x,y,text:'',saved:false,color:PIN_COLORS[saved.length%PIN_COLORS.length],number:saved.length+1});
+      activePin=id;render();
+      setTimeout(()=>document.querySelector(`[data-pin="${id}"] textarea`)?.focus(),30);
     });
     main.appendChild(wrap);
   } else {
-    const zone = document.createElement('label');
-    zone.className = 'upload-zone';
-    zone.innerHTML = `
-      <svg viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="4"/><circle cx="10" cy="11" r="2.5"/><polyline points="2 22 10 13 18 20 22 16 30 22"/></svg>
-      <p>גרור תמונה, או <span>לחץ לבחירה</span></p>
-      <small>PNG · JPG · WebP · GIF</small>
-      <input type="file" accept="image/*" style="display:none">
-    `;
-    zone.querySelector('input').addEventListener('change', e => handleFile(e, tab));
-    zone.addEventListener('dragover', e => e.preventDefault());
-    zone.addEventListener('drop', e => { e.preventDefault(); readFile(e.dataTransfer.files[0], tab); });
+    const zone=document.createElement('label');zone.className='upload-zone';
+    zone.innerHTML=`<svg viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="4"/><circle cx="10" cy="11" r="2.5"/><polyline points="2 22 10 13 18 20 22 16 30 22"/></svg><p>גרור תמונה, או <span>לחץ לבחירה</span></p><small>PNG · JPG · WebP · GIF</small><input type="file" accept="image/*" style="display:none">`;
+    zone.querySelector('input').addEventListener('change',e=>handleFile(e,tab));
+    zone.addEventListener('dragover',e=>e.preventDefault());
+    zone.addEventListener('drop',e=>{e.preventDefault();readFile(e.dataTransfer.files[0],tab);});
     main.appendChild(zone);
   }
-
-  // Share bar
-  const shareBar = document.createElement('div');
-  shareBar.className = 'share-bar';
-  shareBar.innerHTML = `
-    <span class="label">קוד ללקוח:</span>
-    <span class="share-code" id="share-code-el">${tab.code}</span>
-    <span class="share-hint">·</span>
-    <span class="client-url">
-      <span>קישור: </span>
-      <span>${CLIENT_FILE}?code=${tab.code}</span>
-    </span>
-    <button class="btn-sm" id="copy-link-btn">העתק קישור</button>
-  `;
-  shareBar.querySelector('#share-code-el').onclick = function() {
-    navigator.clipboard.writeText(tab.code).catch(() => {});
-    toast('✓ קוד הועתק');
-  };
-  shareBar.querySelector('#copy-link-btn').onclick = () => {
-    const url = window.location.origin + window.location.pathname.replace('dashboard.html', '') + CLIENT_FILE + '?code=' + tab.code;
-    navigator.clipboard.writeText(url).catch(() => {});
-    toast('✓ קישור הועתק');
-  };
-  main.appendChild(shareBar);
+  const sb=document.createElement('div');sb.className='share-bar';
+  const clientURL=window.location.origin+window.location.pathname.replace('dashboard.html','')+'client.html?code='+tab.code;
+  sb.innerHTML=`<span class="share-label">קוד ללקוח:</span><span class="share-code" id="sc">${tab.code}</span><button class="btn-sm" id="copy-url-btn">העתק קישור ללקוח</button>`;
+  sb.querySelector('#sc').onclick=function(){navigator.clipboard.writeText(tab.code).catch(()=>{});toast('✓ קוד הועתק');};
+  sb.querySelector('#copy-url-btn').onclick=()=>{navigator.clipboard.writeText(clientURL).catch(()=>{});toast('✓ קישור הועתק');};
+  main.appendChild(sb);
 }
 
-function renderPin(wrap, ann, tab) {
-  const popLeft = ann.x > 68;
-  const pw = document.createElement('div');
-  pw.className = 'pin-w'; pw.dataset.pin = ann.id;
-  pw.style.left = ann.x + '%'; pw.style.top = ann.y + '%';
-
-  const dot = document.createElement('div');
-  dot.className = 'pin-dot' + (state.activePin === ann.id ? ' active' : '');
-  dot.style.background = ann.color;
-  dot.textContent = ann.number;
-  dot.onclick = e => e.stopPropagation();
-
-  const stem = document.createElement('div');
-  stem.className = 'pin-stem'; stem.style.background = ann.color;
-
-  pw.appendChild(dot); pw.appendChild(stem);
-
-  if (state.activePin === ann.id) {
-    const popup = document.createElement('div');
-    popup.className = 'pin-popup ' + (popLeft ? 'l' : 'r');
-    popup.innerHTML = `<div class="popup-inner"><textarea rows="2" placeholder="הוסף הערה..." dir="rtl"></textarea><div class="popup-actions"><button class="pbtn s">שמור ↵</button><button class="pbtn c">בטל</button></div></div>`;
-    popup.addEventListener('click', e => e.stopPropagation());
-    const ta = popup.querySelector('textarea');
-    ta.value = ann.text || '';
-    ta.addEventListener('input', () => { ann.text = ta.value; });
-    ta.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitDraft(tab, ann.id, false); }
-      if (e.key === 'Escape') cancelPin(tab, ann.id);
-    });
-    popup.querySelector('.pbtn.s').onclick = () => commitDraft(tab, ann.id, false);
-    popup.querySelector('.pbtn.c').onclick = () => cancelPin(tab, ann.id);
-    pw.appendChild(popup);
-  } else if (ann.saved) {
-    const tip = document.createElement('div');
-    tip.className = 'pin-tip ' + (popLeft ? 'l' : 'r');
-    tip.innerHTML = `<div class="tip-inner">${esc(ann.text)}</div>`;
-    pw.addEventListener('mouseenter', () => tip.style.display = 'block');
-    pw.addEventListener('mouseleave', () => tip.style.display = 'none');
+function renderPin(wrap,ann,tab){
+  const pl=ann.x>68;
+  const pw=document.createElement('div');pw.className='pin-w';pw.dataset.pin=ann.id;pw.style.left=ann.x+'%';pw.style.top=ann.y+'%';
+  const dot=document.createElement('div');dot.className='pin-dot';dot.style.background=ann.color;dot.textContent=ann.number;dot.onclick=e=>e.stopPropagation();
+  const stem=document.createElement('div');stem.className='pin-stem';stem.style.background=ann.color;
+  pw.appendChild(dot);pw.appendChild(stem);
+  if(activePin===ann.id){
+    const pop=document.createElement('div');pop.className='pin-popup '+(pl?'l':'r');
+    pop.innerHTML=`<div class="popup-box"><textarea rows="2" placeholder="הוסף הערה..." dir="rtl"></textarea><div class="popup-btns"><button class="pbtn s">שמור ↵</button><button class="pbtn c">בטל</button></div></div>`;
+    pop.addEventListener('click',e=>e.stopPropagation());
+    const ta=pop.querySelector('textarea');ta.value=ann.text||'';
+    ta.addEventListener('input',()=>{ann.text=ta.value;});
+    ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commitDraft(tab,ann.id,false);}if(e.key==='Escape')cancelPin(tab,ann.id);});
+    pop.querySelector('.pbtn.s').onclick=()=>commitDraft(tab,ann.id,false);
+    pop.querySelector('.pbtn.c').onclick=()=>cancelPin(tab,ann.id);
+    pw.appendChild(pop);
+  } else if(ann.saved){
+    const tip=document.createElement('div');tip.className='pin-tip '+(pl?'l':'r');
+    tip.innerHTML=`<div class="tip-box">${esc(ann.text)}</div>`;
+    pw.addEventListener('mouseenter',()=>tip.style.display='block');
+    pw.addEventListener('mouseleave',()=>tip.style.display='none');
     pw.appendChild(tip);
   }
   wrap.appendChild(pw);
 }
 
-function commitDraft(tab, id, silent) {
-  const ann = (tab.annotations||[]).find(a => a.id === id);
-  if (!ann) return;
-  if (!ann.text?.trim()) { cancelPin(tab, id); return; }
-  ann.text = ann.text.trim(); ann.saved = true;
-  state.activePin = null;
-  render(); save();
+async function commitDraft(tab,id,silent){
+  const ann=(tab.annotations||[]).find(a=>a.id===id);
+  if(!ann)return;
+  if(!ann.text?.trim()){cancelPin(tab,id);return;}
+  ann.text=ann.text.trim();ann.saved=true;activePin=null;
+  await saveTab(tab);render();
+}
+async function cancelPin(tab,id){
+  tab.annotations=(tab.annotations||[]).filter(a=>a.id!==id).map((a,i)=>({...a,number:i+1}));
+  activePin=null;render();
 }
 
-function cancelPin(tab, id) {
-  tab.annotations = (tab.annotations||[]).filter(a => a.id !== id).map((a,i) => ({...a, number: i+1}));
-  state.activePin = null;
-  render(); save();
-}
-
-function renderAnnotations() {
-  const tab = getActiveTab();
-  const list = document.getElementById('ann-list');
-  const footer = document.getElementById('ann-footer');
-  const count = document.getElementById('ann-count');
-  list.innerHTML = '';
-  const saved = (tab?.annotations||[]).filter(a => a.saved);
-  count.textContent = saved.length;
-  footer.style.display = saved.length ? 'block' : 'none';
-  if (!saved.length) {
-    list.innerHTML = '<div class="ann-empty">לחץ על התמונה<br>להוספת הערה ראשונה</div>';
-    return;
-  }
-  saved.forEach(ann => {
-    const el = document.createElement('div'); el.className = 'ann-item';
-    el.innerHTML = `
-      <div class="ann-num" style="background:${ann.color}">${ann.number}</div>
-      <div class="ann-content">
-        <div class="ann-text">${esc(ann.text)}</div>
-        <div class="ann-meta">${ann.x.toFixed(0)}%, ${ann.y.toFixed(0)}%</div>
-      </div>
-      <button class="ann-del" title="מחק הערה">
-        <svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
-      </button>`;
-    el.querySelector('.ann-del').onclick = e => { e.stopPropagation(); deletePin(tab, ann.id); };
+function renderAnnotations(){
+  const tab=activeTab();
+  const list=document.getElementById('ann-list');
+  const foot=document.getElementById('ann-foot');
+  const cnt=document.getElementById('ann-cnt');
+  list.innerHTML='';
+  const saved=(tab?.annotations||[]).filter(a=>a.saved);
+  cnt.textContent=saved.length;
+  foot.style.display=saved.length?'block':'none';
+  if(!saved.length){list.innerHTML='<div class="ann-empty">לחץ על התמונה<br>להוספת הערה ראשונה</div>';return;}
+  saved.forEach(ann=>{
+    const el=document.createElement('div');el.className='ann-item';
+    el.innerHTML=`<div class="ann-num" style="background:${ann.color}">${ann.number}</div><div class="ann-body"><div class="ann-text">${esc(ann.text)}</div><div class="ann-meta">${ann.x.toFixed(0)}%, ${ann.y.toFixed(0)}%</div></div><button class="ann-del"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>`;
+    el.querySelector('.ann-del').onclick=async()=>{
+      if(tab){tab.annotations=(tab.annotations||[]).filter(a=>a.id!==ann.id).map((a,i)=>({...a,number:i+1}));await saveTab(tab);render();}
+    };
     list.appendChild(el);
   });
-  document.getElementById('copy-btn').onclick = () => {
-    const text = saved.map(a => `[${a.number}] ${a.text}`).join('\n');
-    navigator.clipboard.writeText(text).catch(() => {});
-    toast('✓ הוערות הועתקו');
+  document.getElementById('copy-all-btn').onclick=()=>{
+    navigator.clipboard.writeText(saved.map(a=>`[${a.number}] ${a.text}`).join('\n')).catch(()=>{});
+    toast('✓ הועתק');
   };
 }
 
-function deletePin(tab, id) {
-  tab.annotations = (tab.annotations||[]).filter(a => a.id !== id).map((a,i) => ({...a, number: i+1}));
-  render(); save();
-}
-
-function handleFile(e, tab) {
-  const file = e.target.files[0]; e.target.value = '';
-  if (file) readFile(file, tab);
-}
-function readFile(file, tab) {
-  if (!file?.type.startsWith('image/')) return;
-  const r = new FileReader();
-  r.onload = ev => { tab.imageData = ev.target.result; state.activePin = null; render(); save(); };
+function handleFile(e,tab){const f=e.target.files[0];e.target.value='';if(f)readFile(f,tab);}
+function readFile(file,tab){
+  if(!file?.type.startsWith('image/'))return;
+  const r=new FileReader();
+  r.onload=async ev=>{tab.imageData=ev.target.result;activePin=null;await saveTab(tab);render();toast('✓ תמונה הועלתה');};
   r.readAsDataURL(file);
 }
 
-// ── Context menus (project / tab) ──
-let ctxProjId = null, ctxTabId = null;
-function showProjCtx(e, proj) {
-  ctxProjId = proj.id;
-  showCtx(e, [
-    { label: 'שנה שם', action: () => renameProjPrompt(proj) },
-    { label: 'מחק פרויקט', danger: true, action: () => deleteProject(proj.id) },
-  ]);
-}
-function showTabCtx(e, tab) {
-  ctxTabId = tab.id;
-  showCtx(e, [
-    { label: 'שנה שם', action: () => renameTab(tab) },
-    { label: 'העתק קוד', action: () => { navigator.clipboard.writeText(tab.code).catch(()=>{}); toast('✓ קוד הועתק'); } },
-    { label: 'מחק כרטיסייה', danger: true, action: () => closeTab(tab.id) },
-  ]);
-}
-
-let ctxEl = null;
-function showCtx(e, items) {
-  removeCtx();
-  const menu = document.createElement('div');
-  menu.style.cssText = `position:fixed;top:${e.clientY}px;right:${window.innerWidth-e.clientX}px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);padding:4px;z-index:999;min-width:150px`;
-  items.forEach(item => {
-    const el = document.createElement('div');
-    el.style.cssText = `padding:7px 12px;font-size:12px;cursor:pointer;border-radius:5px;color:${item.danger?'var(--red)':'var(--txt2)'};display:flex;align-items:center;gap:8px;transition:background .1s`;
-    el.textContent = item.label;
-    el.onmouseenter = () => el.style.background = 'var(--bg3)';
-    el.onmouseleave = () => el.style.background = '';
-    el.onclick = () => { item.action(); removeCtx(); };
-    menu.appendChild(el);
+let ctxCleanup=null;
+function showCtx(e,items){
+  if(ctxCleanup)ctxCleanup();
+  const m=document.createElement('div');
+  m.style.cssText=`position:fixed;top:${e.clientY}px;right:${window.innerWidth-e.clientX}px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);padding:4px;z-index:9999;min-width:160px`;
+  items.forEach(item=>{
+    const el=document.createElement('div');
+    el.style.cssText=`padding:7px 12px;font-size:12px;cursor:pointer;border-radius:5px;color:${item.danger?'var(--red)':'var(--txt2)'};transition:background .1s`;
+    el.textContent=item.label;
+    el.onmouseenter=()=>el.style.background='var(--bg3)';
+    el.onmouseleave=()=>el.style.background='';
+    el.onclick=()=>{item.fn();m.remove();};
+    m.appendChild(el);
   });
-  document.body.appendChild(menu);
-  ctxEl = menu;
-  setTimeout(() => document.addEventListener('click', removeCtx, { once: true }), 0);
+  document.body.appendChild(m);
+  ctxCleanup=()=>{m.remove();ctxCleanup=null;};
+  setTimeout(()=>document.addEventListener('click',()=>m.remove(),{once:true}),0);
 }
-function removeCtx() { if (ctxEl) { ctxEl.remove(); ctxEl = null; } }
-
-function renameProjPrompt(proj) {
-  const name = prompt('שם חדש לפרויקט:', proj.name);
-  if (name?.trim()) { proj.name = name.trim(); render(); save(); }
-}
-function deleteProject(id) {
-  if (!confirm('למחוק את הפרויקט לצמיתות?')) return;
-  state.projects = state.projects.filter(p => p.id !== id);
-  if (state.activeProjectId === id) {
-    state.activeProjectId = state.projects[0]?.id || null;
-    state.activeTabId = state.projects[0]?.tabs[0]?.id || null;
-  }
-  render(); save();
-}
-
-// ── Close modal on bg click ──
-document.getElementById('modal-new-proj').onclick = function(e) { if (e.target === this) this.classList.remove('show'); };
 </script>
 </body>
 </html>
