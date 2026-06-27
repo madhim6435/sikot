@@ -321,7 +321,7 @@ function startLiveUpdates(){
           const t = p.tabs.find(t=>t.id===updated.id);
           if(t){ t.annotations=updated.annotations||[]; }
         }
-        if(updated.id===activeTabId){ renderAnnotations(); }
+        if(updated.id===activeTabId){ renderCanvas(); renderAnnotations(); }
       }
     }
   });
